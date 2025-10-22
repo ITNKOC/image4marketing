@@ -38,8 +38,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Créer le dossier uploads s'il n'existe pas
-    const uploadsDir = join(process.cwd(), 'public', 'uploads');
+    // Sur Vercel, utiliser /tmp (seul dossier accessible en écriture)
+    // En local, utiliser public/uploads
+    const isProduction = process.env.VERCEL === '1';
+    const uploadsDir = isProduction
+      ? '/tmp/uploads'
+      : join(process.cwd(), 'public', 'uploads');
+
     if (!existsSync(uploadsDir)) {
       await mkdir(uploadsDir, { recursive: true });
     }
@@ -58,13 +63,19 @@ export async function POST(request: NextRequest) {
     const image = sharp(buffer);
     const metadata = await image.metadata();
 
-    // Sauvegarder l'image optimisée
-    await image
+    // Optimiser l'image en buffer
+    const optimizedBuffer = await image
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 90 })
-      .toFile(filePath);
+      .toBuffer();
 
-    const imageUrl = `/uploads/${fileName}`;
+    // Sauvegarder dans le dossier approprié
+    await writeFile(filePath, optimizedBuffer);
+
+    // En production, retourner une URL data pour éviter les problèmes de fichiers temporaires
+    const imageUrl = isProduction
+      ? `data:image/jpeg;base64,${optimizedBuffer.toString('base64')}`
+      : `/uploads/${fileName}`;
 
     return NextResponse.json({
       uploadId,
