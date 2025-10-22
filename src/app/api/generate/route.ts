@@ -4,6 +4,9 @@ import { generateImages } from '@/lib/ai-client';
 import { prisma } from '@/lib/prisma';
 import { rateLimit, getClientIdentifier } from '@/lib/rate-limit';
 
+// Marquer cette route comme dynamique pour éviter l'exécution pendant le build
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting

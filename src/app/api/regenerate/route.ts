@@ -3,6 +3,8 @@ import { regenerateRequestSchema } from '@/lib/zod-schemas';
 import { regenerateImage } from '@/lib/ai-client';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
