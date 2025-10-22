@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  uploadId      String   @unique
+  originalImage String
+  createdAt     DateTime @default(now())
+  images        Image[]
+}
+
+model Image {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  url         String
+  prompt      String
+  isFinal     Boolean  @default(false)
+  isValidated Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
