@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 interface SharePageProps {
   params: {

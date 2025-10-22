@@ -6,6 +6,7 @@ import { rateLimit, getClientIdentifier } from '@/lib/rate-limit';
 
 // Marquer cette route comme dynamique pour éviter l'exécution pendant le build
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
