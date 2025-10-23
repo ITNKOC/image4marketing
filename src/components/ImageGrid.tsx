@@ -9,7 +9,7 @@ import { gridContainerVariants, gridItemVariants, cardHoverVariants } from '@/li
 
 export default function ImageGrid() {
   const generatedImages = useImageStore((state) => state.generatedImages);
-  const selectImageForFinal = useImageStore((state) => state.selectImageForFinal);
+  const selectImageForChat = useImageStore((state) => state.selectImageForChat);
   const [modifyingImage, setModifyingImage] = useState<{
     id: string;
     url: string;
@@ -68,7 +68,7 @@ export default function ImageGrid() {
 
                 <div className="flex gap-2">
                   <motion.button
-                    onClick={() => selectImageForFinal(image.id)}
+                    onClick={() => selectImageForChat(image.id)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"

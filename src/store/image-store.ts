@@ -11,6 +11,7 @@ export const useImageStore = create<ImageStore>()(
       generatedImages: [],
       sessionId: null,
       selectedImage: null,
+      chatHistory: [],
       isLoading: false,
       error: null,
 
@@ -43,6 +44,25 @@ export const useImageStore = create<ImageStore>()(
         }
       },
 
+      selectImageForChat: (imageId) => {
+        const image = get().generatedImages.find((img) => img.id === imageId);
+        if (image) {
+          set({
+            selectedImage: image,
+            currentStep: 'chat',
+            chatHistory: [
+              {
+                id: `msg-${Date.now()}`,
+                role: 'assistant',
+                content: 'Image sélectionnée ! Décrivez les modifications que vous souhaitez apporter.',
+                imageUrl: image.url,
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          });
+        }
+      },
+
       updateImage: (imageId, newUrl, newPrompt) =>
         set((state) => ({
           generatedImages: state.generatedImages.map((img) =>
@@ -50,6 +70,15 @@ export const useImageStore = create<ImageStore>()(
               ? { ...img, url: newUrl, prompt: newPrompt }
               : img
           ),
+          selectedImage:
+            state.selectedImage?.id === imageId
+              ? { ...state.selectedImage, url: newUrl, prompt: newPrompt }
+              : state.selectedImage,
+        })),
+
+      addChatMessage: (message) =>
+        set((state) => ({
+          chatHistory: [...state.chatHistory, message],
         })),
 
       selectImageForFinal: (imageId) => {
@@ -78,6 +107,7 @@ export const useImageStore = create<ImageStore>()(
           generatedImages: [],
           sessionId: null,
           selectedImage: null,
+          chatHistory: [],
           isLoading: false,
           error: null,
         }),

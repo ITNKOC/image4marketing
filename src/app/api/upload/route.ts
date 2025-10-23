@@ -73,9 +73,17 @@ export async function POST(request: NextRequest) {
     await writeFile(filePath, optimizedBuffer);
 
     // En production, retourner une URL data pour éviter les problèmes de fichiers temporaires
-    const imageUrl = isProduction
-      ? `data:image/jpeg;base64,${optimizedBuffer.toString('base64')}`
-      : `/uploads/${fileName}`;
+    // En développement, retourner une URL complète (requis par la validation Zod)
+    let imageUrl: string;
+
+    if (isProduction) {
+      imageUrl = `data:image/jpeg;base64,${optimizedBuffer.toString('base64')}`;
+    } else {
+      // Construire l'URL complète à partir des headers de la requête
+      const host = request.headers.get('host') || 'localhost:3000';
+      const protocol = host.includes('localhost') ? 'http' : 'https';
+      imageUrl = `${protocol}://${host}/uploads/${fileName}`;
+    }
 
     return NextResponse.json({
       uploadId,

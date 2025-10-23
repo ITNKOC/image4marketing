@@ -5,6 +5,7 @@ import { useImageStore } from '@/store/image-store';
 import UploadArea from '@/components/UploadArea';
 import ImageGrid from '@/components/ImageGrid';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import ChatModification from '@/components/ChatModification';
 import FinalCard from '@/components/FinalCard';
 import toast from 'react-hot-toast';
 import { fadeInUpVariants } from '@/lib/animations';
@@ -110,7 +111,8 @@ export default function HomePage() {
             {[
               { key: 'upload', label: 'Upload', icon: '📸' },
               { key: 'generate', label: 'Générer', icon: '✨' },
-              { key: 'modify', label: 'Modifier', icon: '🎨' },
+              { key: 'modify', label: 'Choisir', icon: '🎯' },
+              { key: 'chat', label: 'Affiner', icon: '💬' },
               { key: 'final', label: 'Valider', icon: '✅' }
             ].map((step, index) => (
               <div key={step.key} className="flex items-center">
@@ -118,7 +120,7 @@ export default function HomePage() {
                   className={`
                     relative w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium
                     transition-all duration-300
-                    ${currentStep === step.key || ['modify', 'final'].includes(currentStep)
+                    ${currentStep === step.key || (['chat', 'final'].includes(currentStep) && ['upload', 'generate', 'modify'].includes(step.key)) || (currentStep === 'final' && step.key === 'chat')
                       ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg scale-110'
                       : 'bg-white/60 backdrop-blur-lg text-slate-400 border border-slate-200'
                     }
@@ -140,11 +142,11 @@ export default function HomePage() {
                     />
                   )}
                 </div>
-                {index < 3 && (
+                {index < 4 && (
                   <div className="w-8 md:w-12 h-1 mx-1 rounded-full overflow-hidden bg-slate-200">
                     <div
                       className={`h-full transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600 ${
-                        ['modify', 'final'].includes(currentStep) && index < 2
+                        (['chat', 'final'].includes(currentStep) && index < 3) || (currentStep === 'final' && index === 3)
                           ? 'w-full'
                           : 'w-0'
                       }`}
@@ -195,10 +197,12 @@ export default function HomePage() {
 
           {currentStep === 'modify' && <ImageGrid />}
 
+          {currentStep === 'chat' && <ChatModification />}
+
           {currentStep === 'final' && <FinalCard />}
 
           {/* Reset Button moderne */}
-          {currentStep !== 'upload' && currentStep !== 'final' && (
+          {currentStep !== 'upload' && currentStep !== 'final' && currentStep !== 'chat' && (
             <motion.div
               className="text-center pt-8"
               initial={{ opacity: 0 }}
