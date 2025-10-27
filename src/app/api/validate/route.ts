@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateRequestSchema } from '@/lib/zod-schemas';
 import { prisma } from '@/lib/prisma';
+import { generateSocialMediaPost } from '@/lib/ai-client';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -48,6 +49,25 @@ export async function POST(request: NextRequest) {
     const downloadUrl = validatedImage.url;
     const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/share/${sessionId}/${finalImageId}`;
 
+    // Vérifier si c'est une image social media et générer le texte automatiquement
+    const isSocialMediaImage = validatedImage.prompt.toLowerCase().includes('social media')
+      || validatedImage.prompt.toLowerCase().includes('instagram')
+      || validatedImage.prompt.toLowerCase().includes('facebook');
+
+    let socialMediaPost = null;
+
+    if (isSocialMediaImage) {
+      try {
+        console.log('[Validate] Génération du texte social media avec analyse d\'image...');
+        // Passer l'URL de l'image pour l'analyse visuelle
+        socialMediaPost = await generateSocialMediaPost(validatedImage.url);
+        console.log('[Validate] Texte généré avec succès basé sur l\'analyse de l\'image');
+      } catch (error) {
+        console.error('[Validate] Erreur génération texte social media:', error);
+        // On continue même si la génération échoue
+      }
+    }
+
     return NextResponse.json({
       success: true,
       downloadUrl,
@@ -57,6 +77,7 @@ export async function POST(request: NextRequest) {
         url: validatedImage.url,
         prompt: validatedImage.prompt,
       },
+      socialMediaPost, // Sera null si ce n'est pas une image social media
     });
   } catch (error) {
     console.error('Erreur validation:', error);

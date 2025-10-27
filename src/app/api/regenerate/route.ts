@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
 
     // Régénérer l'image avec le nouveau prompt
     const regeneratedImageData = await regenerateImage(
+      originalImage.url,
       originalImage.prompt,
       userPrompt
     );

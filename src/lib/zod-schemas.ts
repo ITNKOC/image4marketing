@@ -22,7 +22,7 @@ export const generateRequestSchema = z.object({
 export const regenerateRequestSchema = z.object({
   sessionId: z.string().min(1, { message: 'Session ID requis' }),
   imageId: z.string().min(1, { message: 'Image ID requis' }),
-  userPrompt: z.string().min(10, { message: 'Le prompt doit faire au moins 10 caractères' }),
+  userPrompt: z.string().min(5, { message: 'Le prompt doit faire au moins 5 caractères' }),
 });
 
 export const validateRequestSchema = z.object({
