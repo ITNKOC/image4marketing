@@ -155,10 +155,15 @@ async function generateWithNanoBanana(
     const mimeType = detectMimeType(params.imageUrl);
 
     // Générer les images séquentiellement pour éviter rate limiting
-    const responses = [];
+    const responses: GeneratedImageResult[] = [];
 
     for (let index = 0; index < variations.length; index++) {
       const prompt = variations[index];
+
+      if (!prompt) {
+        console.error(`[AI Client] Prompt manquant pour l'index ${index}`);
+        continue; // Skip cette itération si le prompt est undefined
+      }
 
       // Délai entre les requêtes (sauf pour la première)
       if (index > 0) {

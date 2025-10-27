@@ -7,8 +7,16 @@ import { useImageStore } from '@/store/image-store';
 import ModifyDialog from './ModifyDialog';
 import { gridContainerVariants, gridItemVariants, cardHoverVariants } from '@/lib/animations';
 
+// Type pour les labels d'images
+interface ImageLabel {
+  title: string;
+  description: string;
+  badge: string;
+  color: string;
+}
+
 // Labels et descriptions pour chaque type d'image
-const IMAGE_LABELS = [
+const IMAGE_LABELS: ImageLabel[] = [
   {
     title: '🛒 E-commerce Parfait',
     description: 'Image retouchée professionnellement - Fond blanc pur - Qualité catalogue',
@@ -34,6 +42,14 @@ const IMAGE_LABELS = [
     color: 'bg-purple-100 text-purple-700'
   }
 ];
+
+// Label par défaut au cas où l'index serait hors limites
+const DEFAULT_LABEL: ImageLabel = {
+  title: '🎨 Image Générée',
+  description: 'Image générée par IA',
+  badge: 'Généré',
+  color: 'bg-gray-100 text-gray-700'
+};
 
 export default function ImageGrid() {
   const generatedImages = useImageStore((state) => state.generatedImages);
@@ -70,7 +86,7 @@ export default function ImageGrid() {
           variants={gridContainerVariants}
         >
           {generatedImages.map((image, index) => {
-            const label = IMAGE_LABELS[index] || IMAGE_LABELS[0];
+            const label: ImageLabel = IMAGE_LABELS[index] ?? DEFAULT_LABEL;
             return (
               <motion.div
                 key={image.id}
