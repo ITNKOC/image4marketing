@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import { SessionProvider } from '@/components/SessionProvider';
+import Navbar from '@/components/Navbar';
 import './globals.css';
 
 const inter = Inter({
@@ -25,30 +27,34 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="font-sans antialiased bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
-            success: {
-              iconTheme: {
-                primary: '#10b981',
-                secondary: '#fff',
+      <body className="font-sans antialiased bg-white min-h-screen">
+        <SessionProvider>
+          <Navbar />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#000000',
+                color: '#ffffff',
+                border: '1px solid #e5e5e5',
               },
-            },
-            error: {
-              iconTheme: {
-                primary: '#ef4444',
-                secondary: '#fff',
+              success: {
+                iconTheme: {
+                  primary: '#000000',
+                  secondary: '#ffffff',
+                },
               },
-            },
-          }}
-        />
-        {children}
+              error: {
+                iconTheme: {
+                  primary: '#000000',
+                  secondary: '#ffffff',
+                },
+              },
+            }}
+          />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

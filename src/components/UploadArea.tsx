@@ -19,7 +19,6 @@ export default function UploadArea() {
   const setUploadedImage = useImageStore((state) => state.setUploadedImage);
   const setError = useImageStore((state) => state.setError);
 
-  // Détecter si on est sur mobile
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -57,7 +56,6 @@ export default function UploadArea() {
   };
 
   const handleFile = async (file: File) => {
-    // Validation Zod côté client
     const validation = uploadFileSchema.safeParse({ file });
 
     if (!validation.success) {
@@ -67,14 +65,12 @@ export default function UploadArea() {
       return;
     }
 
-    // Prévisualisation immédiate
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
 
-    // Upload du fichier
     setUploading(true);
     const formData = new FormData();
     formData.append('file', file);
@@ -124,32 +120,29 @@ export default function UploadArea() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Zone de drag & drop moderne */}
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={`
-            relative rounded-3xl p-8 md:p-12 text-center
-            transition-all duration-300 ease-in-out
+            relative rounded-2xl p-8 md:p-12 text-center smooth-transition
             ${isDragging
-              ? 'bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 scale-105 border-2 border-indigo-500 shadow-2xl'
-              : 'bg-white/70 backdrop-blur-xl border-2 border-slate-200 hover:border-indigo-300 shadow-xl hover:shadow-2xl'
+              ? 'bg-gray-50 border-2 border-black scale-[1.02]'
+              : 'bg-white border-2 border-gray-200 hover:border-gray-400'
             }
             ${uploading ? 'opacity-60 cursor-not-allowed' : 'cursor-default'}
           `}
         >
           <AnimatePresence mode="wait">
             {preview ? (
-              // Prévisualisation avec bouton de changement
               <motion.div
                 key="preview"
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 className="space-y-6"
               >
-                <div className="relative w-full h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 shadow-inner">
+                <div className="relative w-full h-80 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
                   <Image
                     src={preview}
                     alt="Prévisualisation"
@@ -157,7 +150,7 @@ export default function UploadArea() {
                     className="object-contain p-4"
                   />
                   {uploading && (
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
                       <div className="text-white text-center">
                         <svg className="animate-spin h-12 w-12 mx-auto mb-4" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
@@ -170,32 +163,27 @@ export default function UploadArea() {
                 </div>
 
                 {!uploading && (
-                  <motion.button
+                  <button
                     onClick={handleFileButtonClick}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all"
+                    className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 smooth-transition"
                   >
                     Changer l'image
-                  </motion.button>
+                  </button>
                 )}
               </motion.div>
             ) : (
-              // Zone d'upload initiale
               <motion.div
                 key="upload"
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                exit={{ opacity: 0, scale: 0.95 }}
               >
-                {/* Icône moderne */}
                 <motion.div
-                  className="mx-auto w-24 h-24 mb-6 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center"
-                  animate={isDragging ? { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] } : {}}
-                  transition={{ duration: 0.5, repeat: isDragging ? Infinity : 0 }}
+                  className="mx-auto w-20 h-20 mb-6 rounded-full bg-gray-100 flex items-center justify-center"
+                  animate={isDragging ? { scale: [1, 1.1, 1] } : {}}
                 >
                   <svg
-                    className="w-12 h-12 text-indigo-600"
+                    className="w-10 h-10 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -209,71 +197,50 @@ export default function UploadArea() {
                   </svg>
                 </motion.div>
 
-                {/* Texte principal */}
-                <h3 className="text-2xl md:text-3xl font-display font-bold text-slate-800 mb-3">
-                  {isDragging ? 'Déposez votre image ici !' : 'Uploadez votre photo de plat'}
+                <h3 className="text-2xl md:text-3xl font-bold text-black mb-3">
+                  {isDragging ? 'Déposez votre image ici' : 'Uploadez votre photo'}
                 </h3>
-                <p className="text-slate-500 mb-8 max-w-md mx-auto">
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
                   Glissez-déposez une image ou utilisez les boutons ci-dessous
                 </p>
 
-                {/* Boutons d'action modernes */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
-                  <motion.button
+                  <button
                     onClick={handleFileButtonClick}
                     disabled={uploading}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto px-8 py-4 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-3"
                   >
-                    <span className="flex items-center justify-center gap-3">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                      </svg>
-                      Choisir un fichier
-                    </span>
-                  </motion.button>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                    Choisir un fichier
+                  </button>
 
-                  {/* Bouton caméra (mobile uniquement) */}
                   {isMobile && (
-                    <motion.button
+                    <button
                       onClick={handleCameraButtonClick}
                       disabled={uploading}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="group relative w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-8 py-4 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-3"
                     >
-                      <span className="flex items-center justify-center gap-3">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        Prendre une photo
-                      </span>
-                    </motion.button>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Prendre une photo
+                    </button>
                   )}
                 </div>
 
-                {/* Formats acceptés */}
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <span className="px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium text-slate-600 border border-slate-200">
-                    📸 JPEG
-                  </span>
-                  <span className="px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium text-slate-600 border border-slate-200">
-                    🖼️ PNG
-                  </span>
-                  <span className="px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium text-slate-600 border border-slate-200">
-                    ✨ WebP
-                  </span>
-                  <span className="px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium text-slate-600 border border-slate-200">
-                    📏 Max 10MB
-                  </span>
+                <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-gray-600">
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-full">JPEG</span>
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-full">PNG</span>
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-full">WebP</span>
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-full">Max 10MB</span>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Input caché pour sélectionneur de fichier classique */}
           <input
             ref={fileInputRef}
             type="file"
@@ -283,7 +250,6 @@ export default function UploadArea() {
             disabled={uploading}
           />
 
-          {/* Input caché pour caméra mobile */}
           <input
             ref={cameraInputRef}
             type="file"
@@ -295,14 +261,13 @@ export default function UploadArea() {
           />
         </div>
 
-        {/* Info bonus */}
         <motion.p
-          className="text-center mt-6 text-sm text-slate-500"
+          className="text-center mt-6 text-sm text-gray-500"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          💡 Conseil : Prenez une photo bien éclairée pour de meilleurs résultats
+          Prenez une photo bien éclairée pour de meilleurs résultats
         </motion.p>
       </motion.div>
     </div>

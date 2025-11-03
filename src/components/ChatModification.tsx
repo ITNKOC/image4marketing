@@ -133,14 +133,14 @@ export default function ChatModification() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-xl overflow-hidden"
+        className="bg-white rounded-2xl border-2 border-gray-200 overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 px-6 py-4">
-          <h2 className="text-2xl font-display font-bold text-white">
+        <div className="bg-black px-6 py-4">
+          <h2 className="text-2xl font-bold text-white">
             🎨 Modification Interactive
           </h2>
-          <p className="text-white/90 text-sm mt-1">
+          <p className="text-gray-300 text-sm mt-1">
             Continuez à affiner votre image avec des instructions
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function ChatModification() {
         {/* Chat Container */}
         <div
           ref={chatContainerRef}
-          className="h-[500px] overflow-y-auto p-6 space-y-4 bg-gradient-to-br from-slate-50 to-slate-100"
+          className="h-[500px] overflow-y-auto p-6 space-y-4 bg-gray-50"
         >
           <AnimatePresence>
             {chatHistory.map((msg) => (
@@ -162,13 +162,13 @@ export default function ChatModification() {
                 <div
                   className={`max-w-[80%] ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
-                      : 'bg-white text-slate-800 shadow-md'
+                      ? 'bg-black text-white'
+                      : 'bg-white text-black border border-gray-200'
                   } rounded-2xl p-4`}
                 >
                   {/* Image si présente */}
                   {msg.imageUrl && (
-                    <div className="relative w-full h-64 rounded-lg overflow-hidden mb-3 bg-slate-100">
+                    <div className="relative w-full h-64 rounded-lg overflow-hidden mb-3 bg-gray-100">
                       <Image
                         src={msg.imageUrl}
                         alt="Image modifiée"
@@ -182,7 +182,7 @@ export default function ChatModification() {
                   <p className="text-sm leading-relaxed">{msg.content}</p>
 
                   {/* Timestamp */}
-                  <p className={`text-xs mt-2 ${msg.role === 'user' ? 'text-white/70' : 'text-slate-400'}`}>
+                  <p className={`text-xs mt-2 ${msg.role === 'user' ? 'text-gray-300' : 'text-gray-400'}`}>
                     {new Date(msg.timestamp).toLocaleTimeString('fr-FR', {
                       hour: '2-digit',
                       minute: '2-digit',
@@ -200,26 +200,26 @@ export default function ChatModification() {
               animate={{ opacity: 1, y: 0 }}
               className="flex justify-start"
             >
-              <div className="bg-white text-slate-800 rounded-2xl p-4 shadow-md">
+              <div className="bg-white text-black rounded-2xl p-4 border border-gray-200">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     <motion.div
-                      className="w-2 h-2 bg-indigo-600 rounded-full"
+                      className="w-2 h-2 bg-black rounded-full"
                       animate={{ y: [0, -8, 0] }}
                       transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
                     />
                     <motion.div
-                      className="w-2 h-2 bg-purple-600 rounded-full"
+                      className="w-2 h-2 bg-gray-800 rounded-full"
                       animate={{ y: [0, -8, 0] }}
                       transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
                     />
                     <motion.div
-                      className="w-2 h-2 bg-pink-600 rounded-full"
+                      className="w-2 h-2 bg-gray-600 rounded-full"
                       animate={{ y: [0, -8, 0] }}
                       transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
                     />
                   </div>
-                  <span className="text-sm text-slate-600">Modification en cours...</span>
+                  <span className="text-sm text-gray-600">Modification en cours...</span>
                 </div>
               </div>
             </motion.div>
@@ -227,15 +227,15 @@ export default function ChatModification() {
         </div>
 
         {/* Suggestions rapides */}
-        <div className="px-6 py-3 bg-white border-t border-slate-200">
-          <p className="text-xs font-medium text-slate-600 mb-2">Suggestions rapides :</p>
+        <div className="px-6 py-3 bg-white border-t border-gray-200">
+          <p className="text-xs font-medium text-gray-600 mb-2">Suggestions rapides :</p>
           <div className="flex flex-wrap gap-2">
             {PROMPT_SUGGESTIONS.map((suggestion) => (
               <button
                 key={suggestion}
                 onClick={() => handleSuggestionClick(suggestion)}
                 disabled={isProcessing}
-                className="px-3 py-1.5 text-xs bg-indigo-50 text-indigo-700 rounded-full hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                className="px-3 py-1.5 text-xs bg-gray-100 text-black rounded-full hover:bg-gray-200 smooth-transition disabled:opacity-50"
               >
                 {suggestion}
               </button>
@@ -244,7 +244,7 @@ export default function ChatModification() {
         </div>
 
         {/* Input Area */}
-        <div className="p-6 bg-white border-t border-slate-200">
+        <div className="p-6 bg-white border-t border-gray-200">
           <div className="flex gap-3">
             <input
               type="text"
@@ -257,14 +257,14 @@ export default function ChatModification() {
               }}
               placeholder="Décrivez les modifications souhaitées..."
               disabled={isProcessing}
-              className="flex-1 px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50 disabled:bg-slate-100"
+              className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-black disabled:opacity-50 disabled:bg-gray-100"
             />
             <motion.button
               onClick={handleSendMessage}
               disabled={isProcessing || inputValue.trim().length < 5}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-3 bg-black text-white rounded-xl font-medium hover:bg-gray-800 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -280,7 +280,7 @@ export default function ChatModification() {
               disabled={isProcessing}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex-1 px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 smooth-transition disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

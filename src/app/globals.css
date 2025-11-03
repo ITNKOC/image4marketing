@@ -6,19 +6,49 @@
   :root {
     --font-inter: 'Inter', system-ui, sans-serif;
     --font-playfair: 'Playfair Display', serif;
+
+    /* Palette noir & blanc moderne */
+    --color-black: #000000;
+    --color-gray-900: #0f0f0f;
+    --color-gray-800: #1a1a1a;
+    --color-gray-700: #2a2a2a;
+    --color-gray-600: #4a4a4a;
+    --color-gray-500: #6a6a6a;
+    --color-gray-400: #9a9a9a;
+    --color-gray-300: #cacaca;
+    --color-gray-200: #e5e5e5;
+    --color-gray-100: #f5f5f5;
+    --color-white: #ffffff;
   }
 
   body {
     font-family: var(--font-inter);
+    background: var(--color-white);
+    color: var(--color-black);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-playfair);
+    font-family: var(--font-inter);
+    font-weight: 700;
   }
 }
 
 @layer utilities {
   .font-display {
     font-family: var(--font-playfair);
+  }
+
+  /* Animations fluides */
+  .smooth-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 }

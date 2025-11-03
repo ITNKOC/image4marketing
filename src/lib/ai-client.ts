@@ -633,6 +633,7 @@ export async function regenerateImage(
 
 /**
  * Régénération spécifique pour NanoBanana/Gemini
+ * Utilise exactement la même approche que generateWithNanoBanana
  */
 async function regenerateWithNanoBanana(
   imageUrl: string,
@@ -643,6 +644,9 @@ async function regenerateWithNanoBanana(
     const imageBase64 = await urlToBase64(imageUrl);
     const mimeType = detectMimeType(imageUrl);
 
+    console.log('[AI Client] Régénération avec Gemini 2.5 Flash Image...');
+
+    // Utiliser directement gemini-2.5-flash-image pour générer l'image
     const response = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
       {
@@ -664,7 +668,7 @@ async function regenerateWithNanoBanana(
             ],
           }],
           generationConfig: {
-            responseModalities: ['Image'],
+            responseModalities: ['Image'],  // CRUCIAL: demande une image en sortie
             imageConfig: {
               aspectRatio: '1:1',
             },
@@ -681,7 +685,8 @@ async function regenerateWithNanoBanana(
     const data = await response.json();
     console.log('[AI Client] Réponse Gemini régénération:', JSON.stringify(data).substring(0, 200));
 
-    // Extraire l'image générée
+    // Extraire l'image générée depuis la réponse Gemini
+    // L'API peut retourner inlineData (camelCase) ou inline_data (snake_case)
     const imagePart = data.candidates?.[0]?.content?.parts?.find(
       (part: any) => part.inlineData || part.inline_data
     );

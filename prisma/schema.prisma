@@ -7,12 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Modèle User avec authentification username/password
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  password      String    // Hash bcrypt
+  email         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  sessions      Session[]
+
+  @@index([username])
+}
+
 model Session {
   id            String   @id @default(cuid())
   uploadId      String   @unique
   originalImage String
   createdAt     DateTime @default(now())
+
+  // Lien vers l'utilisateur (optionnel pour garder compatibilité avec sessions anonymes)
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   images        Image[]
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model Image {
@@ -24,4 +47,7 @@ model Image {
   isFinal     Boolean  @default(false)
   isValidated Boolean  @default(false)
   createdAt   DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([createdAt])
 }

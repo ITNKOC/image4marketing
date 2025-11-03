@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(npx prisma db push:*)",
+      "Bash(killall -9 node:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(killall:*)"
     ],
     "deny": [],
     "ask": []

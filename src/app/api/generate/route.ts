@@ -3,6 +3,7 @@ import { generateRequestSchema } from '@/lib/zod-schemas';
 import { generateImages } from '@/lib/ai-client';
 import { prisma } from '@/lib/prisma';
 import { rateLimit, getClientIdentifier } from '@/lib/rate-limit';
+import { auth } from '@/lib/auth';
 
 // Marquer cette route comme dynamique pour éviter l'exécution pendant le build
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,9 @@ export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
+    // Récupérer l'utilisateur authentifié
+    const session = await auth();
+    const userId = session?.user?.id || null;
     // Rate limiting
     const identifier = getClientIdentifier(request);
     const rateLimitResult = await rateLimit(identifier, 'generate');
@@ -50,10 +54,11 @@ export async function POST(request: NextRequest) {
     const generatedImages = await generateImages({ imageUrl, stylePrompt });
 
     // Créer une session dans la base de données
-    const session = await prisma.session.create({
+    const dbSession = await prisma.session.create({
       data: {
         uploadId: `upload-${Date.now()}`,
         originalImage: imageUrl,
+        userId, // Lier à l'utilisateur si authentifié
         images: {
           create: generatedImages.map((img) => ({
             url: img.url,
@@ -69,8 +74,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      sessionId: session.id,
-      images: session.images.map((img) => ({
+      sessionId: dbSession.id,
+      images: dbSession.images.map((img) => ({
         id: img.id,
         url: img.url,
         prompt: img.prompt,

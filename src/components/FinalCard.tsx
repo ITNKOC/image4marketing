@@ -90,20 +90,20 @@ export default function FinalCard() {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-4xl mx-auto"
     >
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-white rounded-2xl border-2 border-gray-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-6">
-          <h2 className="text-3xl font-display font-bold text-white">
+        <div className="bg-black px-8 py-6">
+          <h2 className="text-3xl font-bold text-white">
             Votre image finale
           </h2>
-          <p className="text-primary-100 mt-2">
+          <p className="text-gray-300 mt-2">
             Prévisualisation haute résolution
           </p>
         </div>
 
         {/* Image */}
         <div className="p-8">
-          <div className="relative w-full h-[500px] rounded-xl overflow-hidden bg-slate-100 mb-6">
+          <div className="relative w-full h-[500px] rounded-xl overflow-hidden bg-gray-100 mb-6">
             <Image
               src={selectedImage.url}
               alt="Image finale"
@@ -114,18 +114,18 @@ export default function FinalCard() {
           </div>
 
           {/* Metadata */}
-          <div className="bg-slate-50 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold text-slate-800 mb-3">
+          <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
+            <h3 className="text-lg font-semibold text-black mb-3">
               Détails de l'image
             </h3>
             <div className="space-y-2">
               <div>
-                <span className="text-sm font-medium text-slate-600">ID:</span>
-                <span className="ml-2 text-sm text-slate-800">{selectedImage.id}</span>
+                <span className="text-sm font-medium text-gray-600">ID:</span>
+                <span className="ml-2 text-sm text-black">{selectedImage.id}</span>
               </div>
               <div>
-                <span className="text-sm font-medium text-slate-600">Créée le:</span>
-                <span className="ml-2 text-sm text-slate-800">
+                <span className="text-sm font-medium text-gray-600">Créée le:</span>
+                <span className="ml-2 text-sm text-black">
                   {new Date(selectedImage.createdAt).toLocaleDateString('fr-FR', {
                     day: 'numeric',
                     month: 'long',
@@ -136,8 +136,8 @@ export default function FinalCard() {
                 </span>
               </div>
               <div>
-                <span className="text-sm font-medium text-slate-600">Prompt:</span>
-                <p className="mt-1 text-sm text-slate-800 bg-white p-3 rounded border border-slate-200">
+                <span className="text-sm font-medium text-gray-600">Prompt:</span>
+                <p className="mt-1 text-sm text-black bg-white p-3 rounded border border-gray-200">
                   {selectedImage.prompt}
                 </p>
               </div>
@@ -149,32 +149,32 @@ export default function FinalCard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-pink-200 rounded-xl p-6 mb-6"
+              className="bg-gray-50 border-2 border-gray-300 rounded-xl p-6 mb-6"
             >
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-2xl">📱</span>
-                <h3 className="text-xl font-bold text-slate-800">
+                <h3 className="text-xl font-bold text-black">
                   Publication Réseaux Sociaux
                 </h3>
               </div>
 
               {/* Titre */}
               <div className="mb-4">
-                <label className="text-sm font-semibold text-slate-600 mb-2 block">
+                <label className="text-sm font-semibold text-gray-600 mb-2 block">
                   Titre de la publication
                 </label>
-                <div className="bg-white p-4 rounded-lg border border-pink-200">
-                  <p className="text-lg font-bold text-slate-800">{socialMediaPost.title}</p>
+                <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <p className="text-lg font-bold text-black">{socialMediaPost.title}</p>
                 </div>
               </div>
 
               {/* Caption */}
               <div className="mb-4">
-                <label className="text-sm font-semibold text-slate-600 mb-2 block">
+                <label className="text-sm font-semibold text-gray-600 mb-2 block">
                   Texte de la publication
                 </label>
-                <div className="bg-white p-4 rounded-lg border border-pink-200">
-                  <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+                <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
                     {socialMediaPost.caption}
                   </p>
                 </div>
@@ -183,7 +183,7 @@ export default function FinalCard() {
                     navigator.clipboard.writeText(socialMediaPost.caption);
                     toast.success('Texte copié !');
                   }}
-                  className="mt-2 text-xs text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1"
+                  className="mt-2 text-xs text-black hover:text-gray-800 font-medium flex items-center gap-1"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -194,15 +194,15 @@ export default function FinalCard() {
 
               {/* Hashtags */}
               <div>
-                <label className="text-sm font-semibold text-slate-600 mb-2 block">
+                <label className="text-sm font-semibold text-gray-600 mb-2 block">
                   Hashtags recommandés
                 </label>
-                <div className="bg-white p-4 rounded-lg border border-pink-200">
+                <div className="bg-white p-4 rounded-lg border border-gray-200">
                   <div className="flex flex-wrap gap-2">
                     {socialMediaPost.hashtags.map((tag, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 rounded-full text-sm font-medium"
+                        className="px-3 py-1 bg-gray-200 text-black rounded-full text-sm font-medium"
                       >
                         #{tag}
                       </span>
@@ -215,7 +215,7 @@ export default function FinalCard() {
                     navigator.clipboard.writeText(hashtagsText);
                     toast.success('Hashtags copiés !');
                   }}
-                  className="mt-2 text-xs text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1"
+                  className="mt-2 text-xs text-black hover:text-gray-800 font-medium flex items-center gap-1"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -231,7 +231,7 @@ export default function FinalCard() {
                   navigator.clipboard.writeText(fullPost);
                   toast.success('Publication complète copiée !');
                 }}
-                className="w-full mt-4 px-4 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+                className="w-full mt-4 px-4 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 smooth-transition"
               >
                 📋 Copier la publication complète
               </button>
@@ -245,7 +245,7 @@ export default function FinalCard() {
                 <button
                   onClick={handleValidate}
                   disabled={isValidating}
-                  className="w-full px-6 py-4 bg-green-600 text-white text-lg font-medium rounded-xl hover:bg-green-700 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full px-6 py-4 bg-black text-white text-lg font-medium rounded-xl hover:bg-gray-800 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isValidating ? (
                     <>
@@ -277,7 +277,7 @@ export default function FinalCard() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={handleDownload}
-                    className="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+                    className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 smooth-transition flex items-center justify-center gap-2"
                   >
                     <svg
                       className="w-5 h-5"
@@ -296,7 +296,7 @@ export default function FinalCard() {
                   </button>
                   <button
                     onClick={reset}
-                    className="px-6 py-3 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-colors"
+                    className="px-6 py-3 bg-gray-200 text-black font-medium rounded-lg hover:bg-gray-300 smooth-transition"
                   >
                     Recommencer
                   </button>
@@ -304,11 +304,11 @@ export default function FinalCard() {
               </>
             ) : (
               <>
-                <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 text-center">
-                  <p className="text-green-800 font-medium mb-2">
+                <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4 text-center">
+                  <p className="text-black font-medium mb-2">
                     ✓ Image validée avec succès !
                   </p>
-                  <p className="text-green-600 text-sm">
+                  <p className="text-gray-600 text-sm">
                     Vous pouvez maintenant la télécharger ou la partager
                   </p>
                 </div>
@@ -316,7 +316,7 @@ export default function FinalCard() {
                 <div className="grid grid-cols-3 gap-3">
                   <button
                     onClick={handleDownload}
-                    className="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+                    className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 smooth-transition flex items-center justify-center gap-2"
                   >
                     <svg
                       className="w-5 h-5"
@@ -335,7 +335,7 @@ export default function FinalCard() {
                   </button>
                   <button
                     onClick={handleShare}
-                    className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 smooth-transition flex items-center justify-center gap-2"
                   >
                     <svg
                       className="w-5 h-5"
@@ -354,7 +354,7 @@ export default function FinalCard() {
                   </button>
                   <button
                     onClick={reset}
-                    className="px-6 py-3 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-colors"
+                    className="px-6 py-3 bg-gray-200 text-black font-medium rounded-lg hover:bg-gray-300 smooth-transition"
                   >
                     Nouvelle
                   </button>

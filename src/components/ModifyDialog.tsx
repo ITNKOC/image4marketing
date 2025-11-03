@@ -101,16 +101,16 @@ export default function ModifyDialog({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-2xl border-2 border-gray-200 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-display font-bold text-slate-800">
+                  <h2 className="text-2xl font-bold text-black">
                     Modifier l'image
                   </h2>
                   <button
                     onClick={onClose}
-                    className="text-slate-400 hover:text-slate-600 transition-colors"
+                    className="text-gray-400 hover:text-gray-600 smooth-transition"
                   >
                     <svg
                       className="w-6 h-6"
@@ -127,7 +127,7 @@ export default function ModifyDialog({
                 </div>
 
                 {/* Image Preview */}
-                <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6 bg-slate-100">
+                <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6 bg-gray-100">
                   <Image
                     src={imageUrl}
                     alt="Image à modifier"
@@ -138,17 +138,17 @@ export default function ModifyDialog({
 
                 {/* Current Prompt */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-black mb-2">
                     Prompt actuel
                   </label>
-                  <p className="text-sm text-slate-600 bg-slate-50 p-3 rounded-lg">
+                  <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-200">
                     {currentPrompt}
                   </p>
                 </div>
 
                 {/* User Prompt Input */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-black mb-2">
                     Vos modifications (minimum 10 caractères)
                   </label>
                   <textarea
@@ -156,13 +156,13 @@ export default function ModifyDialog({
                     onChange={(e) => setUserPrompt(e.target.value)}
                     placeholder="Ex: ajouter plus de lumière, fond sombre, style minimaliste..."
                     rows={4}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black resize-none"
                   />
                 </div>
 
                 {/* Prompt Suggestions */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-slate-700 mb-3">
+                  <label className="block text-sm font-medium text-black mb-3">
                     Suggestions rapides
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -171,7 +171,7 @@ export default function ModifyDialog({
                         key={suggestion}
                         onClick={() => handleSuggestionClick(suggestion)}
                         disabled={isRegenerating}
-                        className="px-3 py-1.5 text-sm bg-primary-50 text-primary-700 rounded-full hover:bg-primary-100 transition-colors disabled:opacity-50"
+                        className="px-3 py-1.5 text-sm bg-gray-100 text-black rounded-full hover:bg-gray-200 smooth-transition disabled:opacity-50"
                       >
                         + {suggestion}
                       </button>
@@ -184,14 +184,14 @@ export default function ModifyDialog({
                   <button
                     onClick={onClose}
                     disabled={isRegenerating}
-                    className="flex-1 px-6 py-3 bg-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-300 transition-colors disabled:opacity-50"
+                    className="flex-1 px-6 py-3 bg-gray-200 text-black rounded-lg font-medium hover:bg-gray-300 smooth-transition disabled:opacity-50"
                   >
                     Annuler
                   </button>
                   <button
                     onClick={handleRegenerate}
                     disabled={isRegenerating || userPrompt.trim().length < 10}
-                    className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isRegenerating ? 'Régénération...' : 'Régénérer'}
                   </button>
