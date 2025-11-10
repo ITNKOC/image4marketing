@@ -5,7 +5,10 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/web
 
 export const uploadFileSchema = z.object({
   file: z
-    .instanceof(File)
+    .any()
+    .refine((file) => file && typeof file === 'object' && 'size' in file && 'type' in file, {
+      message: 'Fichier invalide',
+    })
     .refine((file) => file.size <= MAX_FILE_SIZE, {
       message: 'Le fichier doit faire moins de 10MB',
     })

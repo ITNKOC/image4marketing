@@ -5,7 +5,8 @@
       "Bash(npx prisma db push:*)",
       "Bash(killall -9 node:*)",
       "Bash(npm uninstall:*)",
-      "Bash(killall:*)"
+      "Bash(killall:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

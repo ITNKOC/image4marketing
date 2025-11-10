@@ -4,6 +4,7 @@ import { generateImages } from '@/lib/ai-client';
 import { prisma } from '@/lib/prisma';
 import { rateLimit, getClientIdentifier } from '@/lib/rate-limit';
 import { auth } from '@/lib/auth';
+import { uploadOriginalImage, uploadGeneratedImage } from '@/lib/cloudinary';
 
 // Marquer cette route comme dynamique pour éviter l'exécution pendant le build
 export const dynamic = 'force-dynamic';
@@ -50,18 +51,36 @@ export async function POST(request: NextRequest) {
 
     const { imageUrl, stylePrompt } = validation.data;
 
-    // Appel au client IA
+    // 1. Upload l'image originale vers Cloudinary
+    console.log('[API] Upload de l\'image originale vers Cloudinary...');
+    const cloudinaryOriginalUrl = await uploadOriginalImage(imageUrl);
+    console.log('[API] Image originale uploadée:', cloudinaryOriginalUrl);
+
+    // 2. Appel au client IA pour générer les images
     const generatedImages = await generateImages({ imageUrl, stylePrompt });
 
-    // Créer une session dans la base de données
+    // 3. Upload toutes les images générées vers Cloudinary
+    console.log('[API] Upload des images générées vers Cloudinary...');
+    const uploadedImages = await Promise.all(
+      generatedImages.map(async (img) => {
+        const cloudinaryUrl = await uploadGeneratedImage(img.url);
+        return {
+          url: cloudinaryUrl,
+          prompt: img.prompt,
+        };
+      })
+    );
+    console.log('[API] Toutes les images uploadées sur Cloudinary');
+
+    // 4. Créer une session dans la base de données avec les URLs Cloudinary
     const dbSession = await prisma.session.create({
       data: {
         uploadId: `upload-${Date.now()}`,
-        originalImage: imageUrl,
+        originalImage: cloudinaryOriginalUrl, // URL Cloudinary au lieu de base64
         userId, // Lier à l'utilisateur si authentifié
         images: {
-          create: generatedImages.map((img) => ({
-            url: img.url,
+          create: uploadedImages.map((img) => ({
+            url: img.url, // URL Cloudinary au lieu de base64
             prompt: img.prompt,
             isFinal: false,
             isValidated: false,

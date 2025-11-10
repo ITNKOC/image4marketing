@@ -405,7 +405,8 @@ const RESTAURANT_INFO = {
  * Génère un texte de publication pour les réseaux sociaux basé sur l'ANALYSE VISUELLE de l'image
  */
 export async function generateSocialMediaPost(
-  imageUrl: string
+  imageUrl: string,
+  userDescription?: string
 ): Promise<SocialMediaPostResult> {
   const hasApiKey = process.env.AI_API_KEY && process.env.AI_API_KEY.length > 0;
 
@@ -425,7 +426,19 @@ export async function generateSocialMediaPost(
     const imageBase64 = await urlToBase64(imageUrl);
     const mimeType = detectMimeType(imageUrl);
 
-    const analysisPrompt = `Analyse cette photo de nourriture du Restaurant Di Menna (cuisine italienne authentique depuis 1971).
+    const analysisPrompt = userDescription
+      ? `Analyse cette photo de nourriture du Restaurant Di Menna (cuisine italienne authentique depuis 1971).
+
+L'UTILISATEUR A FOURNI CETTE DESCRIPTION: "${userDescription}"
+
+CONFIRME et ENRICHIS cette description en analysant:
+1. Le PLAT correspond-il à la description de l'utilisateur? Précise les détails.
+2. Quels INGRÉDIENTS visibles confirment ou complètent cette description?
+3. Quels DÉTAILS VISUELS rendent ce plat appétissant? (couleurs, textures, présentation)
+4. Quelle ÉMOTION ou AMBIANCE se dégage de l'image?
+
+Sois PRÉCIS et utilise la description de l'utilisateur comme point de départ. Réponds en 3-4 phrases courtes.`
+      : `Analyse cette photo de nourriture du Restaurant Di Menna (cuisine italienne authentique depuis 1971).
 
 DÉCRIS en détail et avec précision:
 1. Quel est le PLAT PRINCIPAL visible? (ex: pizza, pasta carbonara, salade César, lasagna, veau parmigiana, arancini, etc.)
@@ -489,19 +502,19 @@ Sois PRÉCIS et DESCRIPTIF. Réponds en 3-4 phrases courtes.`;
 - Spécialité: ${RESTAURANT_INFO.specialty}
 - Histoire: ${RESTAURANT_INFO.description}
 
-**ANALYSE DE L'IMAGE:**
+${userDescription ? `**DESCRIPTION FOURNIE PAR L'UTILISATEUR:**\n"${userDescription}"\n\n` : ''}**ANALYSE DE L'IMAGE:**
 ${imageAnalysis}
 
 **CONSIGNES STRICTES:**
 Génère une publication Instagram/Facebook engageante et professionnelle qui:
 
 1. TITRE (max 60 caractères):
-   - Doit parler SPÉCIFIQUEMENT du plat visible dans l'image
+   - Doit parler SPÉCIFIQUEMENT du plat visible dans l'image${userDescription ? ' (utilise la description fournie par l\'utilisateur)' : ''}
    - Utilise un emoji pertinent au plat (🥗 pour salade, 🍝 pour pasta, 🍕 pour pizza, 🍖 pour viande, etc.)
    - Accrocheur et enthousiaste
 
 2. TEXTE de publication (150-200 mots):
-   - COMMENCE par parler du PLAT SPÉCIFIQUE dans l'image (pas générique!)
+   - COMMENCE par parler du PLAT SPÉCIFIQUE dans l'image${userDescription ? ' en te basant sur la description de l\'utilisateur' : ' (pas générique!)'}
    - Décris ce qui le rend spécial au Restaurant Di Menna
    - Évoque l'authenticité italienne et la tradition depuis 1971
    - Crée une connexion émotionnelle et l'envie
@@ -510,7 +523,7 @@ Génère une publication Instagram/Facebook engageante et professionnelle qui:
    - Ton chaleureux et authentique
 
 3. HASHTAGS (8-10):
-   - Adaptés au PLAT SPÉCIFIQUE (ex: #PastaMTL, #SaladLovers, #MTLPizza, etc.)
+   - Adaptés au PLAT SPÉCIFIQUE${userDescription ? ' mentionné par l\'utilisateur' : ''} (ex: #PastaMTL, #SaladLovers, #MTLPizza, etc.)
    - Mix de populaires et locaux
    - Inclus: #DiMenna, #MontrealFood, #ItalianCuisine, #StLeonard, #MTLEats
 
@@ -523,7 +536,7 @@ Format de réponse STRICTEMENT en JSON:
 
 IMPORTANT:
 - Réponds UNIQUEMENT avec le JSON, sans texte avant ou après
-- Sois SPÉCIFIQUE au plat dans l'image, pas générique!`;
+- Sois SPÉCIFIQUE au plat dans l'image, pas générique!${userDescription ? '\n- UTILISE PRIORITAIREMENT la description fournie par l\'utilisateur pour créer un contenu précis et personnalisé!' : ''}`;
 
     const textResponse = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent',

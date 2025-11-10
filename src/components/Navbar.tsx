@@ -27,6 +27,12 @@ export default function Navbar() {
             ) : session ? (
               <>
                 <Link
+                  href="/gallery"
+                  className="text-sm font-medium text-gray-700 hover:text-black smooth-transition"
+                >
+                  Galerie
+                </Link>
+                <Link
                   href="/profile"
                   className="text-sm font-medium text-gray-700 hover:text-black smooth-transition"
                 >
@@ -46,6 +52,12 @@ export default function Navbar() {
               </>
             ) : (
               <>
+                <Link
+                  href="/gallery"
+                  className="text-sm font-medium text-gray-700 hover:text-black smooth-transition"
+                >
+                  Galerie
+                </Link>
                 <Link
                   href="/login"
                   className="text-sm font-medium text-gray-700 hover:text-black smooth-transition"

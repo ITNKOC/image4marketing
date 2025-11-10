@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
 import sharp from 'sharp';
 import { generateId } from '@/lib/utils';
+import { uploadOriginalImage } from '@/lib/cloudinary';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -38,22 +36,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Sur Vercel, utiliser /tmp (seul dossier accessible en écriture)
-    // En local, utiliser public/uploads
-    const isProduction = process.env.VERCEL === '1';
-    const uploadsDir = isProduction
-      ? '/tmp/uploads'
-      : join(process.cwd(), 'public', 'uploads');
-
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-
-    // Générer un nom de fichier unique
+    // Générer un ID unique pour le tracking
     const uploadId = generateId();
-    const fileExtension = file.name.split('.').pop() ?? 'jpg';
-    const fileName = `${uploadId}.${fileExtension}`;
-    const filePath = join(uploadsDir, fileName);
 
     // Convertir le fichier en buffer et l'optimiser avec sharp
     const arrayBuffer = await file.arrayBuffer();
@@ -63,27 +47,19 @@ export async function POST(request: NextRequest) {
     const image = sharp(buffer);
     const metadata = await image.metadata();
 
-    // Optimiser l'image en buffer
+    // Optimiser l'image
     const optimizedBuffer = await image
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 90 })
       .toBuffer();
 
-    // Sauvegarder dans le dossier approprié
-    await writeFile(filePath, optimizedBuffer);
+    // Convertir en base64 pour l'upload vers Cloudinary
+    const base64Image = `data:image/jpeg;base64,${optimizedBuffer.toString('base64')}`;
 
-    // En production, retourner une URL data pour éviter les problèmes de fichiers temporaires
-    // En développement, retourner une URL complète (requis par la validation Zod)
-    let imageUrl: string;
-
-    if (isProduction) {
-      imageUrl = `data:image/jpeg;base64,${optimizedBuffer.toString('base64')}`;
-    } else {
-      // Construire l'URL complète à partir des headers de la requête
-      const host = request.headers.get('host') || 'localhost:3000';
-      const protocol = host.includes('localhost') ? 'http' : 'https';
-      imageUrl = `${protocol}://${host}/uploads/${fileName}`;
-    }
+    // Upload vers Cloudinary (au lieu du filesystem)
+    console.log('[Upload API] Upload vers Cloudinary...');
+    const imageUrl = await uploadOriginalImage(base64Image);
+    console.log('[Upload API] Image uploadée:', imageUrl);
 
     return NextResponse.json({
       uploadId,

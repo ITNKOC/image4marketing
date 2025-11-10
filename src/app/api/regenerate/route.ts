@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { regenerateRequestSchema } from '@/lib/zod-schemas';
 import { regenerateImage } from '@/lib/ai-client';
 import { prisma } from '@/lib/prisma';
+import { uploadGeneratedImage } from '@/lib/cloudinary';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -40,11 +41,16 @@ export async function POST(request: NextRequest) {
       userPrompt
     );
 
-    // Mettre à jour l'image dans la base de données
+    // Upload l'image régénérée vers Cloudinary
+    console.log('[Regenerate API] Upload de l\'image régénérée vers Cloudinary...');
+    const cloudinaryUrl = await uploadGeneratedImage(regeneratedImageData.url);
+    console.log('[Regenerate API] Image uploadée:', cloudinaryUrl);
+
+    // Mettre à jour l'image dans la base de données avec l'URL Cloudinary
     const updatedImage = await prisma.image.update({
       where: { id: imageId },
       data: {
-        url: regeneratedImageData.url,
+        url: cloudinaryUrl, // URL Cloudinary au lieu de base64
         prompt: regeneratedImageData.prompt,
       },
     });
