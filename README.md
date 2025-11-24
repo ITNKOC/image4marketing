@@ -728,7 +728,7 @@ Ce projet est un MVP éducatif. Libre d'utilisation.
 
 ## 👨‍💻 Auteur
 
-Développé avec ❤️ par **CodeArchitect** (Claude AI)
+Développé avec ❤️ par ITNKOC 
 
 ---
 
